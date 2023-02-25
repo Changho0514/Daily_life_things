@@ -1,0 +1,141 @@
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.StringTokenizer;
+import java.util.random.*;
+
+public class Main{
+
+    public static StringTokenizer st;
+    public static int[] fw_num;
+    public static int[] mid_num;
+    public static int[] df_num;
+    public static int N, M, O;
+    
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        
+        st = new StringTokenizer(br.readLine(), ",");
+        int N = st.countTokens();
+        fw_num = new int[N];
+        String[] fw = new String[N];
+        for (int i = 0; i<N; i++){
+            fw[i] = st.nextToken();
+        }
+        
+        st = new StringTokenizer(br.readLine(), ",");
+        int M = st.countTokens();
+        String[] mid = new String[M];
+        mid_num = new int[M];
+        for (int i = 0; i<M; i++){
+            mid[i] = st.nextToken();
+        }
+
+        st = new StringTokenizer(br.readLine(), ",");
+        int O = st.countTokens();
+        String[] df = new String[O];
+        df_num = new int[O];
+        for (int i = 0; i<O; i++){
+            df[i] = st.nextToken();
+        }
+
+        // 출전 멤버 
+
+        for (int z = 1; z < 5; z++){
+            System.out.println("==========" + z +"쿼멤버"+ "==========");
+            String[] fw_in = new String[3];
+            String[] mid_in = new String[3];
+            String[] df_in = new String[4];
+
+            int[] a = makenansu(3, N, fw_num);
+            for (int i = 0 ; i < a.length; i++){
+                fw_in[i] = fw[a[i]];
+            }
+
+            int[] b = makenansu(3, M, mid_num);
+            for (int i = 0 ; i < b.length; i++){
+                mid_in[i] = mid[b[i]];
+            }
+
+            int[] c = makenansu(4, O, df_num);
+            for (int i = 0 ; i < c.length; i++){
+                df_in[i] = df[c[i]];
+            }
+        
+            System.out.println(fw_in[0] + ", " +fw_in[1] + ", " +fw_in[2]);
+            System.out.println(mid_in[0] + ", " +mid_in[1] + ", " +mid_in[2]);
+            System.out.println(df_in[0] + ", " + df_in[1] + ", " + df_in[2] + ", " +df_in[3]);
+            
+            // for (int i = 0; i < N; i++){
+            //     System.out.print(fw[i] + " : " + fw_num[i]+ "번" + ' ');
+            // }
+            // System.out.println();
+
+            // for (int i = 0; i < M; i++){
+            //     System.out.print(mid[i] + " : " + mid_num[i]+ "번" + ' ');
+            // }
+            // System.out.println();
+
+            // for (int i = 0; i < O; i++){
+            //     System.out.print(df[i] + " : " + df_num[i]+ "번" + ' ');
+            // }
+            // System.out.println();
+
+        }
+        sb.append("=========================출전횟수========================").append('\n');
+        for (int i = 0; i < N; i++){
+            sb.append(fw[i] + " : " + fw_num[i]+ "번").append(' ');
+        }
+        sb.append('\n');
+
+        for (int i = 0; i < M; i++){
+            sb.append(mid[i] + " : " + mid_num[i]+ "번").append(' ');
+        }
+        sb.append('\n');
+        for (int i = 0; i < O; i++){
+            sb.append(df[i] + " : " + df_num[i]+ "번").append(' ');
+        }
+
+        System.out.println(sb);
+    }
+        
+    public static int[] makenansu(int A, int B, int[] C){
+        int count = A; // 난수 생성 갯수
+		int a[] = new int[count];
+		Random r = new Random();
+
+		ArrayList<Integer> b = new ArrayList<>();
+
+		for(int i = 0; i < count; i++){
+			int temp = r.nextInt(B); // 
+            int current = C[temp];    //C 는 fw_num (출전횟수)
+            for (int j = 0; j < C.length; j++) {
+                for (int k = 0; k < C.length; k++) {
+                    if (j == k) continue; // 같은 index는 비교할 필요가 없으므로 건너뜁니다.
+                    if (current > C[k]) {
+                        current = C[k]; //더 작은 수가 있다면 current 바꿔주기
+                        temp = k;
+                    }
+                }
+            }
+            
+            a[i] = temp; //제일 작은 수의 인덱스가 나와야 한다.
+            C[temp]++;
+            for(int j=0; j<i; j++){
+				if(a[i] == a[j]){
+					// System.out.println(C.toString()+ "의" + a[i] + "번째 사람은 -1 해줘야해요");
+                    i--;
+                    b.add(temp);
+				}
+			}
+		}
+        
+        while(b.size() > 0){
+            C[b.remove(0)]--;
+        }
+        return a;
+    }
+}
